@@ -34,7 +34,7 @@ class AuthService {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email.trim(), password: password);
-     
+      print('the result of the login is: $result');
       User user = result.user;
       print('${this.runtimeType} Firebase user: $user');
       if (user.emailVerified) {
