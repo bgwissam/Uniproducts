@@ -30,17 +30,13 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
-
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-<script type="module">
+  <script type="module">
     import { firebaseConfig} from '../lib/configuration/firebase-config.js';
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     firebase.analytics();
 </script>
+<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-firestore.js"></script>
