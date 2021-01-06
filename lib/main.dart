@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer' as developer;
 
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
@@ -8,14 +9,17 @@ import 'package:web_product_unitrade/screens/authentication/sign_in.dart';
 import 'package:web_product_unitrade/screens/authentication/wrapper.dart';
 import 'package:web_product_unitrade/services/auth.dart';
 import 'package:web_product_unitrade/shared/constants.dart';
+import 'package:web_product_unitrade/shared/loading.dart';
 import 'package:web_product_unitrade/shared/string.dart';
 
 import 'models/user.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  developer.log('${Firebase.apps.length}', name: 'main.dart');
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.dumpErrorToConsole(details);
-    
   };
   runApp(App());
 }
@@ -25,36 +29,13 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  // Set default `_initialized` and `_error` state to false
-  bool _initialized;
-  bool _error;
-
-  // Define an async function to initialize FlutterFire
-  void initializeFlutterFire() async {
-    try {
-      // Wait for Firebase to initialize and set `_initialized` state to true
-      await Firebase.initializeApp();
-      setState(() {
-        _initialized = true;
-      });
-    } catch (e) {
-      // Set `_error` state to true if Firebase initialization fails
-      setState(() {
-        _error = true;
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    initializeFlutterFire();
-    _error = false;
-    _initialized = false;
-    super.initState();
-  }
-
+  
   @override
   Widget build(BuildContext context) {
+    if(Firebase.apps.length == 0){
+      return Loading();
+    }
+    else
     return StreamProvider<UserData>.value(
       value: AuthService().user,
       child: MaterialApp(

@@ -14,12 +14,14 @@ class _SignInState extends State<SignIn> {
   final _formKey = new GlobalKey<FormState>();
   double sizedBoxWidth = 5.0;
   bool loading = false;
+  String message = ' ';
 
   //Data input strings
   String email, password;
   String error;
 
   void initStat() {
+    message = ' ';
     super.initState();
   }
 
@@ -30,8 +32,10 @@ class _SignInState extends State<SignIn> {
         key: _formKey,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: Wrap(
+            direction: Axis.vertical,
+            spacing: 1.0,
+            runSpacing: 1.0,
             children: [
               Container(
                 height: 50.0,
@@ -81,14 +85,22 @@ class _SignInState extends State<SignIn> {
                       });
                       dynamic result = await _auth
                           .signInWithUserNameandPassword(email, password);
+
+                      print('Signing in result: $result');
                       if (result != null) {
-                        setState(() {
-                          loading = false;
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Wrapper()));
-                        });
+                        if (result == 'User is verified')
+                          setState(() {
+                            loading = false;
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Wrapper()));
+                          });
+                        else {
+                          setState(() {
+                            message = result;
+                          });
+                        }
                       }
                     }
                   },
@@ -99,6 +111,9 @@ class _SignInState extends State<SignIn> {
                     });
                   },
                 ),
+              ),
+              Container(
+                child: Text(message),
               ),
               SizedBox(
                 height: sizedBoxWidth,
@@ -134,7 +149,6 @@ class _SignInState extends State<SignIn> {
                       }
                     }
                   },
-                  
                 ),
               ),
             ],

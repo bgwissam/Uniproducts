@@ -397,7 +397,7 @@ class _ProductFormState extends State<ProductForm> {
         child: new Form(
           key: _formKey,
           child:
-              Container(width: pageWidth / 2, child: _buildProductFormAdmin()),
+              Container(width: pageWidth / 1.5, child: _buildProductFormAdmin()),
         ),
       );
     } else if (widget.roles.contains('isPriceAdmin')) {
@@ -430,9 +430,10 @@ class _ProductFormState extends State<ProductForm> {
   //Build the product form for admin users to allow editing
   Widget _buildProductFormAdmin() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+      padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           //Select product division unit
