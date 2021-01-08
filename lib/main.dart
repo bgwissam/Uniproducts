@@ -14,13 +14,13 @@ import 'package:web_product_unitrade/shared/string.dart';
 
 import 'models/user.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  developer.log('${Firebase.apps.length}', name: 'main.dart');
-  FlutterError.onError = (FlutterErrorDetails details) {
-    FlutterError.dumpErrorToConsole(details);
-  };
+Future<void> main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+  // developer.log('${Firebase.apps.length}', name: 'main.dart');
+  // FlutterError.onError = (FlutterErrorDetails details) {
+  //   FlutterError.dumpErrorToConsole(details);
+  // };
   runApp(App());
 }
 
@@ -29,27 +29,44 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
   @override
   Widget build(BuildContext context) {
-    if(Firebase.apps.length == 0){
-      return Loading();
-    }
-    else
-    return StreamProvider<UserData>.value(
-      value: AuthService().user,
-      child: MaterialApp(
-        title: MAIN_TITLE,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(primarySwatch: Colors.amber, accentColor: Colors.amber[200]),
-        home: MyHomePage(
-          title: HOME_PAGE,
-        ),
-        routes: <String, WidgetBuilder>{
-          '/home': (BuildContext context) => new Wrapper(),
-        },
-      ),
-    );
+    return FutureBuilder(
+        future: _initialization,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Container(
+              child: Text('An Error Occurred'),
+            );
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            return StreamProvider<UserData>.value(
+              value: AuthService().user,
+              child: MaterialApp(
+                title: MAIN_TITLE,
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData(
+                    primarySwatch: Colors.amber,
+                    accentColor: Colors.amber[200]),
+                home: MyHomePage(
+                  title: HOME_PAGE,
+                ),
+                routes: <String, WidgetBuilder>{
+                  '/home': (BuildContext context) => new Wrapper(),
+                },
+              ),
+            );
+          }
+          return MaterialApp(
+            title: MAIN_TITLE,
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+                primarySwatch: Colors.red, accentColor: Colors.red[200]),
+            home: Loading(),
+          );
+        });
   }
 }
 
@@ -71,38 +88,49 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-          child: Column(
-        children: [
-          Container(
-            child: Image.asset(
-              'images/logo.png',
-              height: 300.0,
-              width: 800.0,
-            ),
-          ),
-          Container(
-            width: 300.0,
-            child: RaisedButton(
-              color: Colors.deepOrange[400],
-              child: Text(
-                SIGN_IN_TEXT,
-                style: buttonStyle,
+          child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                child: Image.asset(
+                  'images/logo.png',
+                  height: 300.0,
+                  width: 800.0,
+                ),
               ),
-              onPressed: () {
-                setState(() {
-                  !showSignInInput
-                      ? showSignInInput = true
-                      : showSignInInput = false;
-                });
-              },
             ),
-          ),
-          showSignInInput
-              ? Container(height: 200.0, width: 300.0, child: SignIn())
-              : SizedBox(
-                  height: 15.0,
-                )
-        ],
+            Center(
+              child: Container(
+                width: 300.0,
+                child: RaisedButton(
+                  color: Colors.deepOrange[400],
+                  child: Text(
+                    SIGN_IN_TEXT,
+                    style: buttonStyle,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      !showSignInInput
+                          ? showSignInInput = true
+                          : showSignInInput = false;
+                    });
+                  },
+                ),
+              ),
+            ),
+            showSignInInput
+                ? Center(
+                    child:
+                        Container(height: 250.0, width: 300.0, child: SignIn()))
+                : Center(
+                    child: SizedBox(
+                      height: 15.0,
+                    ),
+                  )
+          ],
+        ),
       )),
     );
   }

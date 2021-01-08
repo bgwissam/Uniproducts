@@ -157,7 +157,7 @@ class _ProductListState extends State<ProductList> {
         children: <Widget>[
           Container(
             child: RaisedButton(
-              color: Colors.blue[300],
+              color: Colors.amber,
               child: Text(CLEAR_BUTTON),
               elevation: clearButton ? 5.0 : 0.0,
               shape: RoundedRectangleBorder(

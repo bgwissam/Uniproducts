@@ -35,6 +35,7 @@ class AuthService {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email.trim(), password: password);
       User user = result.user;
+      
       if (user.emailVerified) {
         print('${this.runtimeType} current user is verified ${user.uid}');
         return 'User is verified';

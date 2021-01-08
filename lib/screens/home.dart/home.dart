@@ -147,7 +147,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       context,
                       MaterialPageRoute(
                           builder: (BuildContext context) => Wrapper()),
-                      ModalRoute.withName('/'));
+                      ModalRoute.withName('/home'));
                 },
                 child: Text(ALERT_YES),
               ),
